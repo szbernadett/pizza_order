@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import model.Pizza;
 
 /**
  *
@@ -18,10 +19,15 @@ public class OrderDetailsPaneController implements Initializable {
     
     @FXML private Label pizzaDetailsLbl;
     @FXML private Label customerDetailsLbl;
+    private Pizza pizza;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
     }
     
+    
+    public void setPizza(Pizza pizza){
+        this.pizza = pizza;
+    }
 }

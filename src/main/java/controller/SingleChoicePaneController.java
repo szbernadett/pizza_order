@@ -10,17 +10,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import util.AccessibilityHelper;
+import util.SelectionState;
 
 /**
  *
  * @author igbin
  */
-public abstract class SingleChoicePaneController<T extends Enum<T>> implements Initializable {
+public abstract class SingleChoicePaneController<T extends Enum<T>> extends StatefulController  {
     @FXML
     protected VBox optionsBox;
 
@@ -28,6 +28,10 @@ public abstract class SingleChoicePaneController<T extends Enum<T>> implements I
     protected final Map<T, RadioButton> radioButtons = new LinkedHashMap<>();
 
     protected T selectedValue;
+
+    public SingleChoicePaneController(SelectionState selectionState) {
+        super(selectionState);
+    }
 
     protected abstract Class<T> getEnumClass();
 
@@ -40,27 +44,14 @@ public abstract class SingleChoicePaneController<T extends Enum<T>> implements I
             radioButtons.put(value, rb);
             optionsBox.getChildren().add(rb);
         }
+        
         AccessibilityHelper.enhanceControls(new ArrayList<>(radioButtons.values()));
-        restoreSelection();
+        
     }
 
-    public void saveSelection() {
-        if (toggleGroup.getSelectedToggle() != null) {
-            selectedValue = (T) toggleGroup.getSelectedToggle().getUserData();
-        } else {
-            selectedValue = null;
-        }
-    }
-
-    public void restoreSelection() {
-        if (selectedValue != null && radioButtons.containsKey(selectedValue)) {
-            radioButtons.get(selectedValue).setSelected(true);
-        }
-    }
 
     public void setSelectedValue(T value) {
         this.selectedValue = value;
-        restoreSelection();
     }
 
     public T getSelectedValue() {

@@ -12,8 +12,8 @@
    <children>
       <GridPane prefHeight="250.0" prefWidth="530.0">
          <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="260.0" minWidth="10.0" prefWidth="200.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="330.0" minWidth="10.0" prefWidth="330.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="260.0" minWidth="10.0" prefWidth="142.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="389.0" minWidth="10.0" prefWidth="388.0" />
             <ColumnConstraints />
          </columnConstraints>
          <rowConstraints>
@@ -29,7 +29,7 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <Label prefHeight="38.0" prefWidth="87.0" text="1 x pizza with" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <Label alignment="TOP_RIGHT" prefHeight="69.0" prefWidth="162.0" text="1 x pizza :" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
@@ -37,7 +37,7 @@
                   <Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="pizzaDetailsLbl" prefHeight="78.0" prefWidth="314.0" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <Label fx:id="pizzaDetailsLbl" alignment="TOP_LEFT" prefHeight="69.0" prefWidth="322.0" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -45,20 +45,23 @@
                   <Font size="13.0" />
                </font>
             </Label>
-            <Label prefHeight="22.0" prefWidth="79.0" text="Delivered to:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Label fx:id="customerDetailsLbl" alignment="TOP_LEFT" prefHeight="108.0" prefWidth="320.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <Label alignment="TOP_RIGHT" prefHeight="53.0" prefWidth="142.0" text="Delivery to:" GridPane.rowIndex="2">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
                <font>
                   <Font name="System Bold" size="13.0" />
-               </font>
-            </Label>
-            <Label fx:id="customerDetailsLbl" prefHeight="108.0" prefWidth="320.0" text="Customer Name\n33 street name\nCity name\nP45 L00" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.valignment="TOP">
-               <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </GridPane.margin>
-               <font>
-                  <Font size="13.0" />
                </font>
             </Label>
          </children>

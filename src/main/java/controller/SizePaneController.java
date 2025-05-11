@@ -4,7 +4,8 @@
  */
 package controller;
 
-import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.RadioButton;
 import model.Size;
 import util.SelectionState;
 
@@ -12,27 +13,39 @@ import util.SelectionState;
  *
  * @author igbin
  */
-public class SizePaneController extends SingleChoicePaneController implements Initializable, StatefulController {
-
-    private SelectionState state;
+public class SizePaneController extends SingleChoicePaneController implements BaseController {
     
+
+    public SizePaneController(SelectionState selectionState) {
+        super(selectionState);
+    }
+    
+    @Override
+     public void updateView(){
+        for (Node node : this.optionsBox.getChildren()) {
+            RadioButton rb = (RadioButton) node;
+            System.out.println(rb.getUserData());
+        if ( selectionState.size.equals(rb.getUserData())) {
+            rb.setSelected(true);
+            break;
+        }
+    }
+    }
+
     @Override
     protected Class getEnumClass() {
         return Size.class;
     }
 
     @Override
-    public void saveTo(SelectionState state) {
-        saveSelection();
-        state.size = (Size) getSelectedValue();
+    public void saveTo() {
+        selectionState.size = (Size) getSelectedValue();
     }
 
     @Override
-    public void loadFrom(SelectionState state) {
-        setSelectedValue(state.size);
+    public void loadFrom() {
+        setSelectedValue(selectionState.size);
     }
     
-    public void setSelectionState(SelectionState state){
-        this.state = state;
-    }
+  
 }

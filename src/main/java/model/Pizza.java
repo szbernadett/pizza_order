@@ -58,8 +58,8 @@ public class Pizza {
             return this;
         }
         
-        public Builder addTopping(Topping topping) {
-            pizza.toppings.add(topping);
+        public Builder toppings (List<Topping> toppings) {
+            pizza.toppings = toppings;
             return this;
         }
         
@@ -68,13 +68,30 @@ public class Pizza {
         }
         
         public Pizza build() {
-            // Validate pizza has minimum requirements
-            if (pizza.size == null || pizza.crust == null || 
-                pizza.sauce == null || pizza.cheese == null) {
-                throw new IllegalStateException("Pizza must have size, crust, sauce, and cheese");
-            }
             return pizza;
         }
+        
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(size != null ? size.name().toLowerCase() : "no size");
+        sb.append(", ").append(crust != null ? crust.name().toLowerCase() + " crust" : "no crust");
+        sb.append(", ").append(sauce != null ? sauce.name().toLowerCase() + " sauce" : "no sauce");
+        sb.append(", ").append(cheese != null ? cheese.name().toLowerCase() + " cheese" : "no cheese");
+
+        sb.append(", toppings: ");
+        if (toppings.isEmpty()) {
+            sb.append("none");
+        } else {
+            for (Topping topping : toppings) {
+                sb.append(topping.name().toLowerCase()).append(" ");
+            }
+        }
+
+        sb.append(", total price: £").append(String.format("%.2f", price));
+
+        return sb.toString().trim();
+    }
 }

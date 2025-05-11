@@ -25,7 +25,7 @@ public enum CheeseType {
     @Override
     public String toString() {
        String displayName = name().charAt(0) + name().substring(1).toLowerCase().replace('_', ' ');
-        String nameWithPrice = getPrice() == 0 ? displayName : displayName + "( + £" + getPrice()+ " )";
+        String nameWithPrice = getPrice() == 0 ? displayName : displayName + " ( + £ " + getPrice()+ " )";
         
         return nameWithPrice;
     }

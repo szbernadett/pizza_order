@@ -9,7 +9,7 @@ package model;
  * @author igbin
  */
 public enum CrustType {
-    REGULAR(0),
+    CLASSIC(0),
     THIN(0.50),
     DEEP_PAN(0.50);
     
@@ -26,7 +26,7 @@ public enum CrustType {
     @Override
     public String toString() {
         String displayName = name().charAt(0) + name().substring(1).toLowerCase().replace('_', ' ');
-        String nameWithPrice = getPrice() == 0 ? displayName : displayName + "( + £" + getPrice()+ " )";
+        String nameWithPrice = getPrice() == 0 ? displayName : displayName + " ( + £ " + getPrice()+ " )";
         
         return nameWithPrice;
     }

@@ -5,97 +5,185 @@
 package controller;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-import model.Pizza;
+import state.ApplicationState;
+import state.GreetingState;
+import state.OrderConfirmationState;
+import state.PizzaCreationState;
+import util.ControllerFactory;
 import util.SelectionState;
+import util.Step;
 
 /**
  *
  * @author igbin
  */
-public class MainViewController {
-    @FXML private StackPane contentStackPane;
+public class MainViewController implements Initializable, StateContext {
+    @FXML private StackPane stepContainer;
     @FXML private Button backBtn;
     @FXML private Button nextBtn;
 
-    private final SelectionState state = new SelectionState();
-    private final Pizza.Builder pizzaBuilder = new Pizza.Builder();
+    private final List<String> fxmlSteps = List.of(
+            "/view/welcome_pane.fxml",
+            "/view/size_pane.fxml",
+            "/view/crust_type_pane.fxml",
+            "/view/sauce_type_pane.fxml",
+            "/view/cheese_type_pane.fxml",
+            "/view/toppings_pane.fxml",
+            "/view/order_details_pane.fxml"
+    );
 
     private final List<Step> steps = new ArrayList<>();
     private int currentStepIndex = 0;
-   
 
+    private ApplicationState state;
+    private final SelectionState selectionState = SelectionState.getInstance();
 
-    @FXML
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        backBtn.addEventHandler(ActionEvent.ACTION, this::onBackButtonClick);
+        nextBtn.addEventHandler(ActionEvent.ACTION, this::onNextButtonClick);
         
         try {
-            loadSteps();
-            showStep(0);
+            for (int i = 0; i < fxmlSteps.size(); i++) {
+                BaseController controller = ControllerFactory.create(fxmlSteps.get(i), selectionState);
+                switch(i){
+                    case 0:
+                        steps.add(loadStep(fxmlSteps.get(i), controller, GreetingState.class));
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                        steps.add(loadStep(fxmlSteps.get(i), controller, PizzaCreationState.class));
+                        break;
+                    case 6:
+                        steps.add(loadStep(fxmlSteps.get(i), controller, OrderConfirmationState.class));
+                    default:
+                        break;
+                }
+            }
         } catch (IOException e) {
-            e.printStackTrace(); // Replace with dialog/log
+                System.out.println("Failed to load files necessary to run the application.");
+                e.printStackTrace();
+        }
+
+        setApplicationState(new GreetingState(this));
+        Platform.runLater(() -> { showCurrentStep(); }); 
+    }
+
+    private Step loadStep(String fxmlPath, BaseController controller, Class<? extends ApplicationState> stateClass) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        loader.setController(controller);
+        Node pane = loader.load();
+        return new Step(pane, controller, stateClass);
+    }
+
+
+    @Override
+    public Optional<BaseController> getControllerForState(Class<? extends ApplicationState> stateClass) {
+        for (Step step : steps) {
+            if(step.getStateClass().equals(stateClass)){
+                return Optional.of(step.getController());
+            }
+        }
+        
+        return Optional.of(null);
+    }
+
+    @Override
+    public boolean hasNextStep() {
+        return currentStepIndex + 1 < steps.size();
+    }
+
+    @Override
+    public boolean isStepInState(Class<? extends ApplicationState> stateClass, int stepIndex) {
+        if (stepIndex >= steps.size() || stepIndex < 0) return false;
+        return steps.get(stepIndex).getStateClass().equals(stateClass);
+    }
+
+    @Override
+    public void showNextStep() {
+        if (hasNextStep()) {
+            currentStepIndex++;
+            showCurrentStep();
         }
     }
 
-    private void loadSteps() throws IOException {
-        steps.add(loadStep("/view/welcomePane.fxml", null));
-        steps.add(loadStep("/view/sizePane.fxml", controller -> ((SizePaneController) controller).setSelectedValue(state.size)));
-        steps.add(loadStep("/view/crustTypePane.fxml", controller -> ((CrustTypePaneController) controller).setSelectedValue(state.crust)));
-        steps.add(loadStep("/view/sauceTypePane.fxml", controller -> ((SauceTypePaneController) controller).setSelectedValue(state.sauce)));
-        steps.add(loadStep("/view/toppingsPane.fxml", controller -> ((ToppingsPaneController) controller).restoreSelections()));
-        steps.add(loadStep("/view/cheeseTypePane.fxml", controller -> ((CheeseTypePaneController) controller).setSelectedValue(state.cheese)));
-        steps.add(loadStep("/view/orderDetailsPane.fxml", controller -> {
-            ((OrderDetailsPaneController) controller).setPizza(pizzaBuilder.build());
-        }));
-    }
-
-    private Step loadStep(String fxmlPath, StepInitialiser initialiser) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        Node pane = loader.load();
-        StatefulController controller = loader.getController();
-        if (initialiser != null) initialiser.init(controller);
-        return new Step(pane, controller);
-    }
-
-    private void showStep(int index) {
-        contentStackPane.getChildren().setAll(steps.get(index).pane());
-        backBtn.setDisable(index == 0);
-        nextBtn.setText(index == steps.size() - 1 ? "Finish" : "Next");
-    }
-
-    @FXML
-    private void onBackButtonClick() {
-        saveCurrentStep();
+    @Override
+    public void showPreviousStep() {
         if (currentStepIndex > 0) {
             currentStepIndex--;
-            showStep(currentStepIndex);
+            showCurrentStep();
         }
     }
 
-    @FXML
-    private void onNextButtonClick() {
-        saveCurrentStep();
-        if (currentStepIndex < steps.size() - 1) {
-            currentStepIndex++;
-            showStep(currentStepIndex);
-        } else {
-            System.out.println("Pizza built: " + pizzaBuilder.build());
+    @Override
+    public void showCurrentStep() {
+        Step current = steps.get(currentStepIndex);
+        stepContainer.getChildren().setAll(current.getPane());
+        BaseController controller = current.getController();
+        controller.updateView();
+        if (current.getStateClass().equals(PizzaCreationState.class)) {
+            StatefulController stateful = (StatefulController) controller;
+            stateful.loadFrom();
+        } else if (current.getStateClass().equals(OrderConfirmationState.class)) {
+            OrderDetailsPaneController odc = (OrderDetailsPaneController) controller;
+            odc.updateView();
         }
     }
 
-    private void saveCurrentStep() {
-        StatefulController controller = (StatefulController) steps.get(currentStepIndex).controller();
-            controller.saveTo(state);
+    private void onNextButtonClick(ActionEvent event) {
+        Step current = steps.get(currentStepIndex);
+        if (current.getStateClass().equals(PizzaCreationState.class)) {
+            StatefulController stateful = (StatefulController) current.getController();
+            stateful.saveTo();
+        }
+        state.onNext();
     }
 
-    private record Step(Node pane, Object controller) {}
-    private interface StepInitialiser {
-        void init(Object controller);
+    private void onBackButtonClick(ActionEvent event) {
+        Step current = steps.get(currentStepIndex);
+        if (current.getStateClass().equals(PizzaCreationState.class)) {
+            StatefulController stateful = (StatefulController) current.getController();
+            stateful.saveTo();
+        }
+        state.onBack();
     }
+
+    @Override
+    public void setApplicationState(ApplicationState state) {
+        this.state = state;
+    }
+
+    @Override
+    public ApplicationState getApplicationState() {
+        return this.state;
+    }
+
+    @Override
+    public SelectionState getSelectionState() {
+        return this.selectionState;
+    }
+
+    @Override
+    public int getCurrentStepIndex() {
+        return currentStepIndex;
+    }
+
+
+ 
 }

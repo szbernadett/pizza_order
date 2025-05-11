@@ -4,18 +4,36 @@
  */
 package controller;
 
-import javafx.fxml.Initializable;
 import model.SauceType;
+import util.SelectionState;
 
 /**
  *
  * @author igbin
  */
-public class SauceTypePaneController extends SingleChoicePaneController implements Initializable {
+public class SauceTypePaneController extends SingleChoicePaneController implements BaseController {
 
+    public SauceTypePaneController(SelectionState selectionState) {
+        super(selectionState);
+    }
+
+    @Override
+        public void updateView(){
+    }
+    
     @Override
     protected Class getEnumClass() {
         return SauceType.class;
+    }
+
+    @Override
+    public void saveTo() {
+        selectionState.sauce = (SauceType) getSelectedValue();
+    }
+
+    @Override
+    public void loadFrom() {
+        setSelectedValue(selectionState.sauce);
     }
     
 }

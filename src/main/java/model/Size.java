@@ -26,6 +26,7 @@ public enum Size {
     
     @Override
     public String toString() {
-        return name().charAt(0) + name().substring(1).toLowerCase().replace('_', ' ');
+        return name().charAt(0) + name().substring(1).toLowerCase().replace('_', ' ') +" ( £ "
+                + price + " )";
     }
 }

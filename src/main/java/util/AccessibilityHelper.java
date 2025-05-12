@@ -26,6 +26,7 @@ public class AccessibilityHelper {
      */
     public static void enhanceControls(List<? extends Labeled> controls) {
         Set<Character> usedMnemonics = new HashSet<>();
+        System.out.println("controls in this method: " + controls);
 
         // Sort controls by label length (shorter = higher priority)
         controls.sort(Comparator.comparing(c -> c.getText().length()));
@@ -46,8 +47,8 @@ public class AccessibilityHelper {
                     StringBuilder newText = new StringBuilder(text);
                     newText.insert(i, '_');
 
-                    control.setText(newText.toString());
                     control.setMnemonicParsing(true);
+                    control.setText(newText.toString());
 
                     assigned = true;
                     break;

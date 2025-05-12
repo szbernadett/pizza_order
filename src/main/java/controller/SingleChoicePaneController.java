@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import util.AccessibilityHelper;
@@ -44,10 +45,19 @@ public abstract class SingleChoicePaneController<T extends Enum<T>> extends Stat
             radioButtons.put(value, rb);
             optionsBox.getChildren().add(rb);
         }
-        
-        AccessibilityHelper.enhanceControls(new ArrayList<>(radioButtons.values()));
+        ArrayList<RadioButton> rbs = new ArrayList<>(radioButtons.values());
+        AccessibilityHelper.enhanceControls(rbs);
         
     }
+
+    public void saveSelectedRadioButtonValue() {
+    Toggle selectedToggle = toggleGroup.getSelectedToggle();
+    if (selectedToggle != null) {
+        @SuppressWarnings("unchecked")
+        T value = (T) selectedToggle.getUserData();
+        setSelectedValue(value);
+    }
+}
 
 
     public void setSelectedValue(T value) {

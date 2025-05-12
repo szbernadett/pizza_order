@@ -4,6 +4,8 @@
  */
 package controller;
 
+import javafx.scene.Node;
+import javafx.scene.control.RadioButton;
 import model.SauceType;
 import util.SelectionState;
 
@@ -19,6 +21,13 @@ public class SauceTypePaneController extends SingleChoicePaneController implemen
 
     @Override
         public void updateView(){
+             for (Node node : this.optionsBox.getChildren()) {
+            RadioButton rb = (RadioButton) node;
+            if ( selectionState.sauce.equals(rb.getUserData())) {
+                rb.setSelected(true);
+                break;
+            }
+        }
     }
     
     @Override
@@ -28,6 +37,7 @@ public class SauceTypePaneController extends SingleChoicePaneController implemen
 
     @Override
     public void saveTo() {
+        saveSelectedRadioButtonValue();
         selectionState.sauce = (SauceType) getSelectedValue();
     }
 

@@ -137,12 +137,15 @@ public class MainViewController implements Initializable, StateContext {
         stepContainer.getChildren().setAll(current.getPane());
         BaseController controller = current.getController();
         controller.updateView();
-        if (current.getStateClass().equals(PizzaCreationState.class)) {
+        Class<? extends ApplicationState> stateClass = current.getStateClass();
+        if(!stateClass.equals(GreetingState.class)) backBtn.setDisable(backBtn.isDisable());
+        if (stateClass.equals(PizzaCreationState.class)) {
             StatefulController stateful = (StatefulController) controller;
             stateful.loadFrom();
-        } else if (current.getStateClass().equals(OrderConfirmationState.class)) {
-            OrderDetailsPaneController odc = (OrderDetailsPaneController) controller;
-            odc.updateView();
+        } else if (stateClass.equals(GreetingState.class)){
+            backBtn.setDisable(true);
+        } else if(stateClass.equals(OrderConfirmationState.class)) {
+            nextBtn.setText("Confirm");
         }
     }
 
@@ -167,6 +170,7 @@ public class MainViewController implements Initializable, StateContext {
     @Override
     public void setApplicationState(ApplicationState state) {
         this.state = state;
+        System.out.println("Application in state: " + state.getClass().getName());
     }
 
     @Override

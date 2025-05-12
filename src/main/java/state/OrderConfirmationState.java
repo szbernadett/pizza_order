@@ -37,7 +37,6 @@ public class OrderConfirmationState extends ApplicationState {
                     .toppings(selState.toppings)
                     .cheese(selState.cheese)
                     .build();
-            System.out.println("pizza " + pizza);
             odpController.setPizza(pizza);
             context.showCurrentStep();
         }

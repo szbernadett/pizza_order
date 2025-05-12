@@ -24,12 +24,11 @@ public class SizePaneController extends SingleChoicePaneController implements Ba
      public void updateView(){
         for (Node node : this.optionsBox.getChildren()) {
             RadioButton rb = (RadioButton) node;
-            System.out.println(rb.getUserData());
-        if ( selectionState.size.equals(rb.getUserData())) {
-            rb.setSelected(true);
-            break;
+            if ( selectionState.size.equals(rb.getUserData())) {
+                rb.setSelected(true);
+                break;
+            }
         }
-    }
     }
 
     @Override
@@ -39,6 +38,7 @@ public class SizePaneController extends SingleChoicePaneController implements Ba
 
     @Override
     public void saveTo() {
+        saveSelectedRadioButtonValue();
         selectionState.size = (Size) getSelectedValue();
     }
 

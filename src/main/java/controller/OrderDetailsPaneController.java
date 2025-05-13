@@ -6,7 +6,6 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -24,7 +23,7 @@ public class OrderDetailsPaneController implements Initializable, BaseController
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        customerDetailsLbl.setText("Customer Name/n33 street name/nCity name/nP45 L00");
+        customerDetailsLbl.setText("Customer Name\n33 street name\nCity name\nM45 1BC");
     }
     
     public void updateView(){

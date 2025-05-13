@@ -8,7 +8,6 @@ import controller.BaseController;
 import controller.OrderDetailsPaneController;
 import controller.StateContext;
 import java.util.Optional;
-import javafx.fxml.Initializable;
 import model.Pizza;
 import util.SelectionState;
 
@@ -18,13 +17,13 @@ import util.SelectionState;
  */
 public class OrderConfirmationState extends ApplicationState {
     
-    public OrderConfirmationState(StateContext context) {
-        super(context);
+    public OrderConfirmationState(StateContext context, StateName stateName) {
+        super(context, stateName);
     }
 
     
     public void onEnter() {
-        Optional<BaseController> controller = context.getControllerForState(OrderConfirmationState.class);
+        Optional<BaseController> controller = context.getControllerForState(getStateName());
         OrderDetailsPaneController odpController;
         if(controller.isPresent()){
             odpController = (OrderDetailsPaneController)  controller.get();
@@ -44,12 +43,12 @@ public class OrderConfirmationState extends ApplicationState {
 
     @Override
     public void onNext() {
-        // Finalize order
+        context.closeApp();
     }
 
     @Override
     public void onBack() {
-        context.setApplicationState(new PizzaCreationState(context));
+        context.setApplicationState(new PizzaCreationState(context, StateName.PIZZA_CREATION));
         context.showPreviousStep();
     }
     

@@ -5,8 +5,8 @@
 package controller;
 
 import java.util.Optional;
-import javafx.fxml.Initializable;
 import state.ApplicationState;
+import state.ApplicationState.StateName;
 import util.SelectionState;
 
 /**
@@ -17,11 +17,12 @@ public interface StateContext {
     void setApplicationState(ApplicationState state);
     ApplicationState getApplicationState();
     public boolean hasNextStep();
-    public boolean isStepInState(Class<? extends ApplicationState> stateClass, int stepIndex);
+    public boolean isStepInState(StateName appStateName, int stepIndex);
     public void showNextStep();
     public void showCurrentStep();
     public void showPreviousStep();
-    public Optional<BaseController> getControllerForState(Class<? extends ApplicationState> stateClass);
+    public Optional<BaseController> getControllerForState(StateName appStateName);
     public SelectionState getSelectionState();
     public int getCurrentStepIndex();
+    public void closeApp();
 }

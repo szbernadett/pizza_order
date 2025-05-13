@@ -12,15 +12,15 @@ import controller.StateContext;
  */
 public class GreetingState extends ApplicationState {
 
-    public GreetingState(StateContext context) {
-        super(context);
+    public GreetingState(StateContext context, StateName stateName) {
+        super(context, stateName);
     }
     
 
 
     @Override
     public void onNext() {
-        context.setApplicationState(new PizzaCreationState(context));
+        context.setApplicationState(new PizzaCreationState(context, StateName.PIZZA_CREATION));
         context.showNextStep(); // Transition to pizza creation
     }
 

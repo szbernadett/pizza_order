@@ -50,7 +50,7 @@ public abstract class SingleChoicePaneController<T extends Enum<T>> extends Stat
         
     }
 
-    public void saveSelectedRadioButtonValue() {
+    public void saveSelectedRadioButtonValue    () {
     Toggle selectedToggle = toggleGroup.getSelectedToggle();
     if (selectedToggle != null) {
         @SuppressWarnings("unchecked")
@@ -58,7 +58,6 @@ public abstract class SingleChoicePaneController<T extends Enum<T>> extends Stat
         setSelectedValue(value);
     }
 }
-
 
     public void setSelectedValue(T value) {
         this.selectedValue = value;

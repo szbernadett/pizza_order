@@ -5,9 +5,6 @@
 package state;
 
 import controller.StateContext;
-import controller.StatefulController;
-import java.util.Optional;
-import javafx.fxml.Initializable;
 
 /**
  *
@@ -15,16 +12,16 @@ import javafx.fxml.Initializable;
  */
 public class PizzaCreationState extends ApplicationState {
     
-    public PizzaCreationState(StateContext context) {
-        super(context);
+    public PizzaCreationState(StateContext context, StateName stateName) {
+        super(context, stateName);
     }
     
 
     @Override
     public void onNext() {
         if (context.hasNextStep()) {
-            if (!context.isStepInState(PizzaCreationState.class, context.getCurrentStepIndex() + 1)) {
-                OrderConfirmationState ocs = new OrderConfirmationState(context);
+            if (!context.isStepInState(getStateName(), context.getCurrentStepIndex() + 1)) {
+                OrderConfirmationState ocs = new OrderConfirmationState(context, StateName.ORDER_CONRIMATION);
                 context.setApplicationState(ocs);
                 ocs.onEnter();
             }
@@ -34,8 +31,8 @@ public class PizzaCreationState extends ApplicationState {
 
     @Override
     public void onBack() {
-        if(!context.isStepInState(PizzaCreationState.class, context.getCurrentStepIndex() - 1)){
-            context.setApplicationState(new GreetingState(context));
+        if(!context.isStepInState(getStateName(), context.getCurrentStepIndex() - 1)){
+            context.setApplicationState(new GreetingState(context, StateName.GREETING));
         }
         context.showPreviousStep();
     }

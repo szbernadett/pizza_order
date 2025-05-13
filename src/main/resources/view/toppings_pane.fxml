@@ -19,7 +19,7 @@
             <RowConstraints maxHeight="186.0" minHeight="10.0" prefHeight="174.0" vgrow="ALWAYS" />
          </rowConstraints>
          <children>
-            <Label prefHeight="19.0" prefWidth="114.0" text="Select Toppings:" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+            <Label fx:id="selToppingsLbl" prefHeight="19.0" prefWidth="114.0" text="Select Toppings:" GridPane.columnSpan="2" GridPane.halignment="CENTER">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>

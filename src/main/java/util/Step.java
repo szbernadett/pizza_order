@@ -5,9 +5,8 @@
 package util;
 
 import controller.BaseController;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import state.ApplicationState;
+import state.ApplicationState.StateName;
 
 /**
  *
@@ -16,12 +15,12 @@ import state.ApplicationState;
 public class Step {
    private final Node pane;
     private final BaseController controller;
-    private final Class<? extends ApplicationState> stateClass;
+    private final StateName appStateName;
 
-    public Step(Node pane, BaseController controller, Class<? extends ApplicationState> stateClass) {
+    public Step(Node pane, BaseController controller, StateName appStateName) {
         this.pane = pane;
         this.controller = controller;
-        this.stateClass = stateClass;
+        this.appStateName = appStateName;
     }
 
     public Node getPane() {
@@ -32,7 +31,7 @@ public class Step {
         return controller;
     }
 
-    public Class<? extends ApplicationState> getStateClass() {
-        return stateClass;
+    public StateName getAppStateName() {
+        return appStateName;
     }
 }

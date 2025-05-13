@@ -45,7 +45,7 @@
                   <Font size="13.0" />
                </font>
             </Label>
-            <Label fx:id="customerDetailsLbl" alignment="TOP_LEFT" prefHeight="108.0" prefWidth="320.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.valignment="TOP">
+            <Label fx:id="customerDetailsLbl" alignment="TOP_LEFT" prefHeight="108.0" prefWidth="320.0" text="example text" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -53,12 +53,12 @@
                   <Font size="13.0" />
                </font>
             </Label>
-            <Label alignment="TOP_RIGHT" prefHeight="53.0" prefWidth="142.0" text="Delivery to:" GridPane.rowIndex="2">
+            <Label alignment="TOP_RIGHT" prefHeight="84.0" prefWidth="132.0" text="Delivery to:" GridPane.rowIndex="2">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <GridPane.margin>
-                  <Insets right="10.0" />
+                  <Insets right="10.0" top="5.0" />
                </GridPane.margin>
                <font>
                   <Font name="System Bold" size="13.0" />

@@ -18,10 +18,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import state.ApplicationState;
+import state.ApplicationState.StateName;
 import state.GreetingState;
-import state.OrderConfirmationState;
-import state.PizzaCreationState;
 import util.ControllerFactory;
 import util.SelectionState;
 import util.Step;
@@ -61,17 +61,17 @@ public class MainViewController implements Initializable, StateContext {
                 BaseController controller = ControllerFactory.create(fxmlSteps.get(i), selectionState);
                 switch(i){
                     case 0:
-                        steps.add(loadStep(fxmlSteps.get(i), controller, GreetingState.class));
+                        steps.add(loadStep(fxmlSteps.get(i), controller, StateName.GREETING));
                         break;
                     case 1:
                     case 2:
                     case 3:
                     case 4:
                     case 5:
-                        steps.add(loadStep(fxmlSteps.get(i), controller, PizzaCreationState.class));
+                        steps.add(loadStep(fxmlSteps.get(i), controller, StateName.PIZZA_CREATION));
                         break;
                     case 6:
-                        steps.add(loadStep(fxmlSteps.get(i), controller, OrderConfirmationState.class));
+                        steps.add(loadStep(fxmlSteps.get(i), controller, StateName.ORDER_CONRIMATION));
                     default:
                         break;
                 }
@@ -81,22 +81,22 @@ public class MainViewController implements Initializable, StateContext {
                 e.printStackTrace();
         }
 
-        setApplicationState(new GreetingState(this));
+        setApplicationState(new GreetingState(this, StateName.GREETING));
         Platform.runLater(() -> { showCurrentStep(); }); 
     }
 
-    private Step loadStep(String fxmlPath, BaseController controller, Class<? extends ApplicationState> stateClass) throws IOException {
+    private Step loadStep(String fxmlPath, BaseController controller, StateName appStateName) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         loader.setController(controller);
         Node pane = loader.load();
-        return new Step(pane, controller, stateClass);
+        return new Step(pane, controller, appStateName);
     }
 
 
     @Override
-    public Optional<BaseController> getControllerForState(Class<? extends ApplicationState> stateClass) {
+    public Optional<BaseController> getControllerForState(StateName appStateName) {
         for (Step step : steps) {
-            if(step.getStateClass().equals(stateClass)){
+            if(step.getAppStateName().equals(appStateName)){
                 return Optional.of(step.getController());
             }
         }
@@ -110,9 +110,9 @@ public class MainViewController implements Initializable, StateContext {
     }
 
     @Override
-    public boolean isStepInState(Class<? extends ApplicationState> stateClass, int stepIndex) {
+    public boolean isStepInState(StateName appStateName, int stepIndex) {
         if (stepIndex >= steps.size() || stepIndex < 0) return false;
-        return steps.get(stepIndex).getStateClass().equals(stateClass);
+        return steps.get(stepIndex).getAppStateName().equals(appStateName);
     }
 
     @Override
@@ -137,21 +137,19 @@ public class MainViewController implements Initializable, StateContext {
         stepContainer.getChildren().setAll(current.getPane());
         BaseController controller = current.getController();
         controller.updateView();
-        Class<? extends ApplicationState> stateClass = current.getStateClass();
-        if(!stateClass.equals(GreetingState.class)) backBtn.setDisable(backBtn.isDisable());
-        if (stateClass.equals(PizzaCreationState.class)) {
+        StateName appStateName = current.getAppStateName();
+        backBtn.setDisable(appStateName.equals(StateName.GREETING));
+        if (appStateName.equals(StateName.PIZZA_CREATION)) {
             StatefulController stateful = (StatefulController) controller;
             stateful.loadFrom();
-        } else if (stateClass.equals(GreetingState.class)){
-            backBtn.setDisable(true);
-        } else if(stateClass.equals(OrderConfirmationState.class)) {
-            nextBtn.setText("Confirm");
+        } else if(appStateName.equals(StateName.ORDER_CONRIMATION)) {
+            nextBtn.setText("Exit");
         }
     }
 
     private void onNextButtonClick(ActionEvent event) {
         Step current = steps.get(currentStepIndex);
-        if (current.getStateClass().equals(PizzaCreationState.class)) {
+        if (current.getAppStateName().equals(StateName.PIZZA_CREATION)) {
             StatefulController stateful = (StatefulController) current.getController();
             stateful.saveTo();
         }
@@ -160,11 +158,17 @@ public class MainViewController implements Initializable, StateContext {
 
     private void onBackButtonClick(ActionEvent event) {
         Step current = steps.get(currentStepIndex);
-        if (current.getStateClass().equals(PizzaCreationState.class)) {
+        if (current.getAppStateName().equals(StateName.PIZZA_CREATION)) {
             StatefulController stateful = (StatefulController) current.getController();
             stateful.saveTo();
         }
         state.onBack();
+    }
+    
+    @Override
+    public void closeApp(){
+        Stage stage = (Stage) nextBtn.getScene().getWindow();
+        stage.close();
     }
 
     @Override

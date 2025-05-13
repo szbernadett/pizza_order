@@ -12,12 +12,17 @@ import controller.StateContext;
  */
 public abstract class ApplicationState {
     StateContext context;
+    StateName stateName;
     
-    ApplicationState(StateContext context){
+    ApplicationState(StateContext context, StateName stateName){
         this.context = context;
+        this.stateName = stateName;
     }
         
     public abstract void onNext();
     public abstract void onBack();
+    public StateName getStateName(){ return this.stateName; }
+    
+    public enum StateName { GREETING, PIZZA_CREATION, ORDER_CONRIMATION } 
     
 }
